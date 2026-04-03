@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelpAnimal.Api", "HelpAnimal.Api.csproj", "{D80E0050-AE6D-D838-162F-72C085423C5B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D80E0050-AE6D-D838-162F-72C085423C5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D80E0050-AE6D-D838-162F-72C085423C5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D80E0050-AE6D-D838-162F-72C085423C5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D80E0050-AE6D-D838-162F-72C085423C5B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F8CDD202-7B8D-4FF7-AC69-553604B007E3}
+	EndGlobalSection
+EndGlobal
