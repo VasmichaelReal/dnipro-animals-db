@@ -1,0 +1,145 @@
+/* --- CSS СТИЛІ (Дизайн-код на основі #C8D68F) --- */
+:root {
+    --bg-color: #C8D68F;         
+    --card-bg: #FAFCF5;          
+    --primary-color: #A3B85C;    
+    --primary-dark: #3F5224;     
+    --text-color: #2D3A1A;       
+    --input-bg: #FFFFFF;         
+    --border-radius: 16px;       
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+body { background-color: var(--bg-color); color: var(--text-color); display: flex; flex-direction: column; min-height: 100vh; }
+
+header { background-color: var(--card-bg); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(63, 82, 36, 0.1); position: sticky; top: 0; z-index: 100; }
+.logo-container { display: flex; align-items: center; cursor: pointer; }
+.logo-text { font-size: 26px; font-weight: 800; color: var(--primary-dark); letter-spacing: 0.5px; }
+.filter-btn { background: transparent; border: 2px solid var(--primary-dark); color: var(--primary-dark); padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: bold; font-size: 15px; transition: all 0.3s ease; }
+.filter-btn:hover { background-color: var(--primary-dark); color: var(--card-bg); }
+
+.container { max-width: 1100px; margin: 40px auto; padding: 0 20px; flex: 1; width: 100%; }
+.page { display: none; animation: fadeIn 0.4s ease; }
+.page.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+.main-title { text-align: center; margin-bottom: 40px; color: var(--primary-dark); font-size: 32px; }
+.catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+
+.empty-state-msg { grid-column: 1 / -1; text-align: center; font-size: 26px; color: var(--primary-dark); padding: 60px 20px; font-weight: bold; background: var(--card-bg); border-radius: var(--border-radius); box-shadow: 0 4px 15px rgba(63, 82, 36, 0.1); }
+
+/* Прибрано overflow: hidden, щоб підказка могла виходити за межі картки */
+.animal-card { background: var(--card-bg); border-radius: var(--border-radius); box-shadow: 0 6px 12px rgba(63, 82, 36, 0.08); cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease; display: flex; flex-direction: column; position: relative; }
+.animal-card:hover { transform: translateY(-8px); box-shadow: 0 12px 20px rgba(63, 82, 36, 0.15); }
+
+/* Заокруглення зображення тепер тут */
+.card-image-container { width: 100%; aspect-ratio: 4 / 3; overflow: hidden; border-radius: var(--border-radius) var(--border-radius) 0 0; }
+.card-image-container img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+.animal-card:hover .card-image-container img { transform: scale(1.05); }
+
+.card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+.card-title { font-size: 22px; margin-bottom: 12px; color: var(--primary-dark); }
+
+.badge { display: inline-block; padding: 6px 12px; border-radius: 15px; font-size: 13px; font-weight: bold; margin-bottom: 15px; align-self: flex-start; }
+.badge.free { background-color: #E6F0D1; color: var(--primary-dark); }
+.badge.booked { background-color: #FCE4E4; color: #9E2A2B; }
+
+/* Виправлений дизайн спливаючої підказки (Tooltip) */
+.badge[data-tooltip] { position: relative; cursor: help; }
+.badge[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: 100%; 
+    left: 0; /* Вирівнювання по лівому краю */
+    margin-top: 8px;
+    background-color: var(--primary-dark);
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: normal;
+    white-space: normal;
+    width: max-content;
+    max-width: 240px;
+    text-align: left; /* Текст ліворуч */
+    line-height: 1.4;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+    z-index: 100; /* Поверх карток */
+    pointer-events: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+.badge[data-tooltip]::before {
+    content: "";
+    position: absolute;
+    top: 100%; 
+    left: 15px; /* Стрілочка дивиться на текст */
+    margin-top: 2px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: transparent transparent var(--primary-dark) transparent;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+    z-index: 100;
+    pointer-events: none;
+}
+.badge[data-tooltip]:hover::after, .badge[data-tooltip]:hover::before { opacity: 1; visibility: visible; }
+
+.filter-menu { position: fixed; top: 70px; right: -320px; width: 320px; height: calc(100vh - 70px); background: var(--card-bg); box-shadow: -4px 0 15px rgba(63, 82, 36, 0.1); padding: 30px; transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 99; border-left: 1px solid var(--primary-color); }
+.filter-menu.open { right: 0; }
+.filter-menu h3 { color: var(--primary-dark); margin-bottom: 25px; font-size: 22px; }
+.filter-group { margin-bottom: 25px; }
+.filter-group label { display: block; margin-bottom: 10px; font-weight: 600; color: var(--primary-dark); }
+
+.custom-select { position: relative; width: 100%; }
+.select-selected { width: 100%; padding: 12px 15px; border-radius: 10px; border: 2px solid var(--primary-color); background-color: var(--input-bg); color: var(--text-color); font-size: 16px; cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s; display: flex; justify-content: space-between; align-items: center; }
+.select-selected:after { content: ""; border: solid var(--primary-dark); border-width: 0 2px 2px 0; display: inline-block; padding: 4px; transform: rotate(45deg); transition: transform 0.3s; }
+.select-selected.select-arrow-active:after { transform: rotate(-135deg); }
+.select-selected:focus, .select-selected.select-arrow-active { outline: none; border-color: var(--primary-dark); box-shadow: 0 0 0 3px rgba(63, 82, 36, 0.15); }
+.select-items { position: absolute; background-color: var(--card-bg); top: 110%; left: 0; right: 0; z-index: 100; border-radius: 14px; box-shadow: 0 8px 25px rgba(63, 82, 36, 0.18); border: 1px solid var(--primary-color); padding: 8px; display: none; max-height: 250px; overflow-y: auto; }
+.select-items div { color: var(--text-color); padding: 10px 15px; cursor: pointer; border-radius: 8px; transition: background-color 0.2s, color 0.2s; margin-bottom: 2px; }
+.select-items div:last-child { margin-bottom: 0; }
+.select-items div:hover, .same-as-selected { background-color: #C5D084; color: var(--primary-dark); font-weight: 600; }
+.select-show { display: block; animation: fadeInDrop 0.2s ease; }
+
+.details-wrapper { background: var(--card-bg); border-radius: var(--border-radius); padding: 30px; display: flex; gap: 40px; box-shadow: 0 8px 20px rgba(63, 82, 36, 0.1); flex-wrap: wrap; }
+.details-image { flex: 1; min-width: 300px; }
+.details-image img { width: 100%; border-radius: calc(var(--border-radius) - 4px); aspect-ratio: 4 / 3; object-fit: cover; }
+.details-info { flex: 1; min-width: 300px; display: flex; flex-direction: column; }
+.details-info h2 { font-size: 36px; color: var(--primary-dark); margin-bottom: 15px; }
+.stat-row { margin: 8px 0; font-size: 17px; }
+.applications-count { background: #E8F0D6; color: var(--primary-dark); padding: 12px 18px; border-radius: 10px; display: inline-block; margin: 20px 0; font-weight: bold; border: 1px solid var(--primary-color); }
+.primary-btn { background-color: var(--primary-dark); color: white; border: none; padding: 15px 25px; border-radius: 12px; font-size: 18px; cursor: pointer; font-weight: bold; width: 100%; margin-top: auto; transition: all 0.3s; }
+.primary-btn:hover:not(:disabled) { background-color: #2D3A1A; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(45, 58, 26, 0.3); }
+.back-btn { display: inline-block; margin-bottom: 25px; cursor: pointer; color: var(--primary-dark); font-weight: 600; font-size: 17px; text-decoration: none; padding: 8px 15px; background: var(--card-bg); border-radius: 20px; transition: background 0.3s; }
+.back-btn:hover { background: #E8F0D6; }
+
+.form-wrapper { background: var(--card-bg); padding: 40px; border-radius: var(--border-radius); max-width: 650px; margin: 0 auto; box-shadow: 0 8px 20px rgba(63, 82, 36, 0.1); }
+.form-wrapper h2 { color: var(--primary-dark); }
+.form-group { margin-bottom: 25px; }
+.form-group label { display: block; margin-bottom: 10px; font-weight: 600; color: var(--primary-dark); }
+.form-group input, .form-group textarea { width: 100%; padding: 14px; border: 2px solid var(--primary-color); background-color: var(--input-bg); border-radius: 10px; font-size: 16px; color: var(--text-color); transition: border-color 0.3s, box-shadow 0.3s; }
+.form-group input[type="file"] { border:none; padding:10px 0; background:transparent;}
+.form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--primary-dark); box-shadow: 0 0 0 3px rgba(63, 82, 36, 0.15); }
+.form-group textarea { resize: vertical; min-height: 120px; }
+.submit-btn { background-color: var(--primary-dark); color: white; border: none; padding: 16px; border-radius: 12px; font-size: 18px; font-weight: bold; width: 100%; cursor: pointer; transition: all 0.3s; }
+.submit-btn:disabled { background-color: #A3B85C; opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.success-message { display: none; text-align: center; padding: 60px 40px; }
+.success-message h2 { color: var(--primary-dark); margin-bottom: 15px; font-size: 32px; }
+.success-message p { margin-bottom: 30px; font-size: 18px; color: var(--text-color); }
+
+.site-footer { background-color: var(--primary-dark); color: var(--card-bg); padding: 50px 0 30px 0; margin-top: 60px; box-shadow: 0 -4px 15px rgba(63, 82, 36, 0.1); }
+.footer-container { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 30px; margin: 0 auto; padding: 0 20px; }
+.footer-contacts h3, .footer-donate h3, .footer-volunteer h3 { color: #E8F0D6; margin-bottom: 20px; font-size: 22px; }
+.footer-contacts p { margin-bottom: 10px; font-size: 16px; color: #e0e0e0; }
+.footer-contacts a { color: var(--card-bg); text-decoration: none; transition: color 0.3s; font-weight: 600; }
+.footer-contacts a:hover { color: var(--primary-color); }
+.footer-volunteer .primary-btn:hover { background: #C8D68F; color: var(--primary-dark); box-shadow: none; }
+.footer-donate { max-width: 400px; }
+.donate-btn { display: inline-block; background-color: #C8D68F; color: var(--primary-dark); padding: 14px 28px; border-radius: 12px; font-size: 18px; font-weight: bold; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); }
+.donate-btn:hover { background-color: var(--card-bg); transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4); }
+
+@media (max-width: 768px) { .footer-container { flex-direction: column; text-align: center; align-items: center; } }

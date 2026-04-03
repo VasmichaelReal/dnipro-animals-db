@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dnipro Animals - Притулок для тварин</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo-container" id="main-logo">
+            <div class="logo-text">Dnipro Animals</div>
+        </div>
+        <button id="header-action-btn" class="filter-btn" onclick="toggleFilter()">Фільтри</button>
+    </header>
+
+    <div id="filter-menu" class="filter-menu">
+        <h3>Фільтрація тварин</h3>
+        <br>
+        <div class="filter-group">
+            <label>Тип тварини</label>
+            <input type="hidden" id="type-filter" value="all">
+            <div class="custom-select" onclick="toggleCustomSelect('type-items', this, event)">
+                <div class="select-selected" id="type-selected">Всі тварини</div>
+                <div class="select-items" id="type-items">
+                    <div class="same-as-selected" onclick="selectOption('type', 'all', 'Всі тварини', event, 'filter')">Всі тварини</div>
+                    <div onclick="selectOption('type', 'Кіт', 'Коти', event, 'filter')">Коти</div>
+                    <div onclick="selectOption('type', 'Собака', 'Собаки', event, 'filter')">Собаки</div>
+                    <div onclick="selectOption('type', 'Гризун', 'Гризуни', event, 'filter')">Гризуни</div>
+                    <div onclick="selectOption('type', 'Птах', 'Птахи', event, 'filter')">Птахи</div>
+                    <div onclick="selectOption('type', 'Рептилія', 'Рептилії', event, 'filter')">Рептилії</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="filter-group" id="breed-filter-group" style="display: none;">
+            <label>Порода</label>
+            <input type="hidden" id="breed-filter" value="all">
+            <div class="custom-select" onclick="toggleCustomSelect('breed-items', this, event)">
+                <div class="select-selected" id="breed-selected">Всі породи</div>
+                <div class="select-items" id="breed-items">
+                    <div class="same-as-selected" onclick="selectOption('breed', 'all', 'Всі породи', event, 'filter')">Всі породи</div>
+                </div>
+            </div>
+        </div>
+        
+        <button class="primary-btn" onclick="applyFilters()">Застосувати</button>
+    </div>
+
+    <div class="container">
+        <div id="catalog-page" class="page active">
+            <h2 class="main-title">Наші хвостики, що шукають дім</h2>
+            <div id="catalog-grid" class="catalog-grid"></div>
+        </div>
+
+        <div id="volunteer-catalog-page" class="page">
+            <h2 class="main-title">Мої додані тварини</h2>
+            <div id="volunteer-catalog-grid" class="catalog-grid"></div>
+        </div>
+
+        <div id="auth-page" class="page">
+            <div class="back-btn" onclick="navigate('catalog')">← На головну</div>
+            <div class="form-wrapper">
+                <h2 style="margin-bottom: 20px;">Вхід для волонтерів</h2>
+                <form id="auth-form" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label>Електронна пошта *</label>
+                        <input type="email" id="auth-email" required placeholder="volunteer@dniproanimal.ua">
+                    </div>
+                    <div class="form-group">
+                        <label>Пароль *</label>
+                        <input type="password" id="auth-password" required placeholder="********">
+                    </div>
+                    <button type="submit" class="submit-btn">Авторизуватись</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="details-page" class="page">
+            <div class="back-btn" id="details-back-btn">← Повернутися</div>
+            <div class="details-wrapper" id="details-content"></div>
+        </div>
+
+        <div id="form-page" class="page">
+            <div class="back-btn" onclick="navigate('details')">← Повернутися до анкети</div>
+            <div class="form-wrapper" id="form-wrapper">
+                <h2 style="margin-bottom: 20px;">Заявка на адапцію</h2>
+                <p style="margin-bottom: 20px; color: var(--text-color);">Ви подаєте заявку на: <strong id="form-animal-name"></strong></p>
+                <form id="adoption-form">
+                    <div class="form-group"><label>ПІБ *</label><input type="text" id="fullName" required oninput="checkForm()"></div>
+                    <div class="form-group"><label>Номер телефону *</label><input type="tel" id="phone" required oninput="checkForm()"></div>
+                    <div class="form-group"><label>Коротка інформація про себе *</label><textarea id="about" required oninput="checkForm()"></textarea></div>
+                    <div class="form-group"><label>Умови проживання *</label><textarea id="conditions" required oninput="checkForm()"></textarea></div>
+                    <button type="submit" id="submit-btn" class="submit-btn" disabled>Відправити заявку</button>
+                </form>
+            </div>
+            <div class="form-wrapper success-message" id="success-message">
+                <h2>Форма відправлена!</h2>
+                <p>Ваша заявка успішно відправлена волонтерам.</p>
+                <button class="primary-btn" onclick="navigate('catalog')">Повернутися на головну</button>
+            </div>
+        </div>
+
+        <div id="editor-page" class="page">
+            <div class="back-btn" onclick="navigate('volunteer-catalog')">← Повернутися до моїх тварин</div>
+            <div class="form-wrapper">
+                <h2 id="editor-title" style="margin-bottom: 20px;">Додати тварину</h2>
+                <form id="editor-form" onsubmit="saveAnimal(event)">
+                    
+                    <div class="form-group">
+                        <label>Тип тварини *</label>
+                        <input type="hidden" id="editor-type-val" value="" required>
+                        <div class="custom-select" onclick="toggleCustomSelect('editor-type-items', this, event)">
+                            <div class="select-selected" id="editor-type-selected">Оберіть тип</div>
+                            <div class="select-items" id="editor-type-items">
+                                <div onclick="selectOption('editor-type', 'Кіт', 'Коти', event, 'editor')">Коти</div>
+                                <div onclick="selectOption('editor-type', 'Собака', 'Собаки', event, 'editor')">Собаки</div>
+                                <div onclick="selectOption('editor-type', 'Гризун', 'Гризуни', event, 'editor')">Гризуни</div>
+                                <div onclick="selectOption('editor-type', 'Птах', 'Птахи', event, 'editor')">Птахи</div>
+                                <div onclick="selectOption('editor-type', 'Рептилія', 'Рептилії', event, 'editor')">Рептилії</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="editor-breed-group" style="display:none;">
+                        <label>Порода *</label>
+                        <input type="hidden" id="editor-breed-val" value="" required>
+                        <div class="custom-select" onclick="toggleCustomSelect('editor-breed-items', this, event)">
+                            <div class="select-selected" id="editor-breed-selected">Оберіть породу</div>
+                            <div class="select-items" id="editor-breed-items"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Фото тварини *</label>
+                        <input type="file" id="editor-photo" accept="image/*" onchange="handleImageUpload(event)">
+                        <img id="editor-photo-preview" style="display:none; width:100%; max-height:300px; object-fit:cover; border-radius:10px; margin-top:10px;">
+                    </div>
+
+                    <div class="form-group"><label>Ім'я *</label><input type="text" id="editor-name" required oninput="checkEditorForm()"></div>
+                    <div class="form-group"><label>Вік *</label><input type="text" id="editor-name-age" required oninput="checkEditorForm()"></div>
+                    
+                    <div class="form-group">
+                        <label>Стать *</label>
+                        <input type="hidden" id="editor-sex-val" value="" required>
+                        <div class="custom-select" onclick="toggleCustomSelect('editor-sex-items', this, event)">
+                            <div class="select-selected" id="editor-sex-selected">Оберіть стать</div>
+                            <div class="select-items" id="editor-sex-items">
+                                <div onclick="selectOption('editor-sex', 'Хлопчик', 'Хлопчик', event, 'editor')">Хлопчик</div>
+                                <div onclick="selectOption('editor-sex', 'Дівчинка', 'Дівчинка', event, 'editor')">Дівчинка</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="editor-med-group" style="display:none;">
+                        <label>Медичні дані (Стерилізація) *</label>
+                        <input type="hidden" id="editor-med-val" value="">
+                        <div class="custom-select" onclick="toggleCustomSelect('editor-med-items', this, event)">
+                            <div class="select-selected" id="editor-med-selected">Оберіть статус</div>
+                            <div class="select-items" id="editor-med-items">
+                                <div onclick="selectOption('editor-med', 'true', 'Стерилізований/а', event, 'editor')">Стерилізований/а</div>
+                                <div onclick="selectOption('editor-med', 'false', 'Не стерилізований/а', event, 'editor')">Не стерилізований/а</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group"><label>Опис *</label><textarea id="editor-desc" required oninput="checkEditorForm()"></textarea></div>
+
+                    <button type="submit" id="editor-submit-btn" class="submit-btn" disabled>Опублікувати</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="site-footer">
+        <div class="container footer-container">
+            <div class="footer-contacts">
+                <h3>Зв'яжіться з нами</h3>
+                <p>Email: <a href="mailto:support@dniproanimals.ua">support@dniproanimals.ua</a></p>
+                <p>Телефон: <a href="tel:+380990001122">+380 99 000 11 22</a></p>
+                <p>Адреса: м. Дніпро, вул. Волонтерська, 12</p>
+            </div>
+            
+            <div class="footer-volunteer" id="footer-role-section">
+                <h3 id="footer-role-title">Команда</h3>
+                <p id="footer-role-desc" style="margin-bottom: 10px; color: #e0e0e0;">Допомагаєте нам рятувати тварин?</p>
+                <button id="footer-role-btn" class="primary-btn" onclick="navigate('auth')" style="width: auto; padding: 10px 20px; font-size: 15px; background: transparent; border: 2px solid #C8D68F; color: #C8D68F;">Волонтер?</button>
+            </div>
+
+            <div class="footer-donate">
+                <h3>Підтримайте притулок</h3>
+                <p style="margin-bottom: 15px; font-size: 14px; opacity: 0.9;">Ваші донати допомагають нам лікувати та годувати тварин.</p>
+                <a href="https://send.monobank.ua/jar/22iGMGBVE2" target="_blank" class="donate-btn">
+                    🐾 На допомогу хвостикам
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
